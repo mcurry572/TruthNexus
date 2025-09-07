@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthNexus - Fact-Checking Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define our custom purple color for Tailwind to use */
+        .bg-custom-purple { background-color: #6d28d9; }
+        .text-custom-purple { color: #6d28d9; }
+        .border-custom-purple { border-color: #6d28d9; }
+        .ring-custom-purple { --tw-ring-color: #6d28d9; }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen font-sans">
+    <div class="w-full max-w-2xl mx-auto p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-bold text-gray-800">TruthNexus</h1>
+            <p class="text-gray-500 mt-2">Your AI-powered article analysis tool.</p>
+        </header>
+
+        <main class="bg-white p-8 rounded-xl shadow-md">
+            <div id="tabs" class="mb-6">
+                <div class="flex border-b">
+                    <button id="url-tab-btn" class="py-2 px-6 text-lg focus:outline-none border-b-2 font-medium border-custom-purple text-custom-purple">Analyze URL</button>
+                    <button id="text-tab-btn" class="py-2 px-6 text-lg focus:outline-none text-gray-500 font-medium">Paste Text</button>
+                </div>
+            </div>
+
+            <form action="/analyze" method="POST">
+                <div id="url-tab-content">
+                    <label for="url_input" class="block text-sm font-medium text-gray-700 mb-2">Enter the URL of the article you want to analyze:</label>
+                    <input type="url" id="url_input" name="url_input" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-purple" placeholder="https://example.com/article">
+                </div>
+                <div id="text-tab-content" class="hidden">
+                     <label for="text_input" class="block text-sm font-medium text-gray-700 mb-2">Paste the article text below:</label>
+                    <textarea id="text_input" name="text_input" rows="8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-purple" placeholder="Paste your article text here..."></textarea>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button type="submit" class="w-full bg-custom-purple text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-300">
+                        Analyze Now
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // Simple JavaScript to handle tab switching
+        const urlTabBtn = document.getElementById('url-tab-btn');
+        const textTabBtn = document.getElementById('text-tab-btn');
+        const urlTabContent = document.getElementById('url-tab-content');
+        const textTabContent = document.getElementById('text-tab-content');
+
+        urlTabBtn.addEventListener('click', () => {
+            // Activate URL tab
+            urlTabBtn.classList.add('border-custom-purple', 'text-custom-purple');
+            textTabBtn.classList.remove('border-custom-purple', 'text-custom-purple');
+            
+            // Show URL content
+            urlTabContent.classList.remove('hidden');
+            textTabContent.classList.add('hidden');
+        });
+
+        textTabBtn.addEventListener('click', () => {
+            // Activate Text tab
+            textTabBtn.classList.add('border-custom-purple', 'text-custom-purple');
+            urlTabBtn.classList.remove('border-custom-purple', 'text-custom-purple');
+            
+            // Show Text content
+            textTabContent.classList.remove('hidden');
+            urlTabContent.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
