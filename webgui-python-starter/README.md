@@ -1,3 +1,6 @@
+# Group Member Names
+Will C, 
+
 # Web GUI Python Starter (FastAPI + Jinja)
 
 A batteries-included starter to build a small web GUI in Python (FastAPI) and connect to your existing web APIs.
