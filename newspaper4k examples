@@ -1,0 +1,43 @@
+import cloudscraper
+from newspaper import Article
+from newspaper import build
+
+
+
+//LIST ARTICLES, TITLES, URLS
+# Build CNN source
+cnn_paper = build('https://www.cnn.com', memoize_articles=False)
+
+# Print some basic info
+print(f"Found {len(cnn_paper.articles)} articles.\n")
+
+# Limit to first 5 articles for demonstration
+for article in cnn_paper.articles[:5]:
+    try:
+        article.download()
+        article.parse()
+        print(f"Title: {article.title}")
+        print(f"URL: {article.url}\n")
+    except Exception as e:
+        print(f"Failed to process article: {e}")
+
+
+//GRAB ARTICLE METADATA: AUTHORS, TEXT, TITLE, ETC
+
+
+
+url = "https://www.cnn.com/2025/09/13/politics/trump-rhetoric-democrats-charlie-kirk"
+scraper = cloudscraper.create_scraper()
+html = scraper.get(url).text
+
+
+article = Article(url)
+
+
+article.download(input_html=html)
+article.parse()
+
+
+print("Title  :", article.title)
+print("Authors:", article.authors)
+print("Text   :", article.text[:500], "...")
