@@ -11,8 +11,11 @@ To run flask program, open environment in "Capstone" folder in vscode. Run "pip 
 
 
 
-Newspaper4k, Scraping headers
+Newspaper4k, Cloudscraper, Scraping headers
 
+You need cloudscraper in order to bypass bot protections
+
+pip install cloudscraper
 pip install newspaper4k
 pip install selenium
 pip install webdriver-manager
