@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+import cloudscraper
+from newspaper import Article
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -12,47 +14,52 @@ def index():
 def analyze():
     """
     Receives form data and renders the results page.
-    This is where you will later integrate your backend analysis logic.
+    Shows the scraped article data.
     """
-    # You can access the submitted data using request.form
-    # url = request.form.get('url_input')
-    # text = request.form.get('text_input')
-    # For now, we will use placeholder data.
+    url = request.form.get('url_input', '').strip()
+    text_input = request.form.get('text_input', '').strip()
 
-    # --- PLACEHOLDER DATA ---
-    # This is the mock data you will replace with your actual analysis results.
-    # The structure (dictionary) is designed for easy replacement.
-    analysis_results = {
-        'score': 82,
-        'score_string': "Likely Credible",
-        'claims': [
-            {
-                'claim': "A study in September 2025 found that renewable energy sources have become cheaper than fossil fuels.",
-                'evidence': "Placeholder: This claim cross-references with data from the International Renewable Energy Agency (IRENA) reports from 2024 and 2025."
-            },
-            {
-                'claim': "The global adoption of electric vehicles has tripled in the last five years.",
-                'evidence': "Placeholder: Verified against sales data from major automotive industry reports."
-            },
-            {
-                'claim': "Policy changes in North America are the primary driver for this shift.",
-                'evidence': "Placeholder: This is a point of contention. While policy is a factor, market forces and technological advancements are also significant contributors."
-            }
-        ],
-        'sources': [
-            {'source_name': "International Renewable Energy Agency", 'link': '#', 'status': 'Credible'},
-            {'source_name': "Global Automotive Market Report 2025", 'link': '#', 'status': 'Credible'},
-            {'source_name': "Unverified blog post", 'link': '#', 'status': 'Questionable'}
-        ],
-        'language_analysis': [
-            {'finding': "Use of emotionally charged language detected.", 'example': "'...a disastrous policy that will ruin our economy.'"},
-            {'finding': "Presence of sweeping generalizations.", 'example': "'Everyone knows that this is the only solution.'"}
-        ]
+    article_title = ""
+    article_authors = []
+    article_text = ""
+
+    # If URL is provided, scrape it
+    if url:
+        try:
+            scraper = cloudscraper.create_scraper()
+            html = scraper.get(url).text
+
+            article = Article(url)
+            article.download(input_html=html)
+            article.parse()
+
+            article_title = article.title
+            article_authors = article.authors
+            article_text = article.text
+
+        except Exception as e:
+            article_title = "Error"
+            article_text = f"Error scraping article: {e}"
+
+    # If user pasted text, use it directly
+    elif text_input:
+        article_title = "User Provided Text"
+        article_text = text_input
+        article_authors = []
+
+    else:
+        article_title = "No Input Provided"
+        article_text = "Please enter a URL or paste article text."
+        article_authors = []
+
+    # Prepare data for template
+    scraped_data = {
+        'article_title': article_title,
+        'article_authors': article_authors,
+        'article_text': article_text[:5000]  # truncate if needed
     }
-    # --- END OF PLACEHOLDER DATA ---
 
-    # Render the results page, passing the data to the template
-    return render_template('results.html', results=analysis_results)
+    return render_template('results.html', results=scraped_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
