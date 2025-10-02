@@ -103,4 +103,3 @@ Thumbs.db
 # Docker (optional, if you add volumes or local images)
 # --------------------------------------------------------------------
 **/docker-data/
-**/
